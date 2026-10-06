@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A deterministic portfolio prototype exploring scenario inputs, kinetic energy and enclosure geometry.">
+  <title>UAV Net Calculator · Portfolio edition</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">PRODUCT PROTOTYPE / PORTFOLIO EDITION</p>
+      <h1>UAV Net Calculator<span class="dot">.</span></h1>
+      <p class="intro">From scenario inputs to an understandable estimate. Explore motion energy and enclosure geometry in one place.</p>
+      <p class="notice">Preliminary exploration only. This tool does not calculate real protective-system strength or confirm the suitability of any net.</p>
+    </header>
+    <div class="layout">
+      <form id="calculator" novalidate class="panel">
+        <div class="section-title"><span>01</span><h2>Define the scenario</h2></div>
+        <label for="scenario">Scenario</label>
+        <select id="scenario" name="scenario" aria-describedby="scenarioError">
+          <option value="collision">Collision</option>
+          <option value="charged">Collision with possible charge</option>
+          <option value="drop">Dropped payload</option>
+          <option value="unknown">Unknown scenario</option>
+        </select>
+        <small class="error" id="scenarioError"></small>
+        <div class="fields">
+          <div><label for="mass">Vehicle mass, kg</label><input id="mass" name="mass" type="text" inputmode="decimal" aria-describedby="massError" required><small class="error" id="massError"></small></div>
+          <div><label for="speed">Speed, km/h</label><input id="speed" name="speed" type="text" inputmode="decimal" aria-describedby="speedError" required><small class="error" id="speedError"></small></div>
+        </div>
+        <label for="charge">Charge mass, kg <span class="muted">(optional)</span></label>
+        <input id="charge" name="charge" type="text" inputmode="decimal" aria-describedby="chargeHelp chargeError">
+        <small id="chargeHelp">Blank = not specified. Zero = explicitly absent. Charge is context only; it is not added to vehicle mass.</small><small class="error" id="chargeError"></small>
+        <div class="section-title"><span>02</span><h2>Describe the enclosure</h2></div>
+        <p class="hint">Optional rectangular geometry. Four walls + roof, no floor. Supply all dimensions and offsets to estimate area.</p>
+        <div class="fields">
+          <div><label for="length">Object length, m</label><input id="length" name="length" type="text" inputmode="decimal" aria-describedby="lengthError"><small class="error" id="lengthError"></small></div>
+          <div><label for="width">Object width, m</label><input id="width" name="width" type="text" inputmode="decimal" aria-describedby="widthError"><small class="error" id="widthError"></small></div>
+          <div><label for="height">Object height, m</label><input id="height" name="height" type="text" inputmode="decimal" aria-describedby="heightError"><small class="error" id="heightError"></small></div>
+          <div><label for="offset">Offset around each side, m</label><input id="offset" name="offset" type="text" inputmode="decimal" value="0" aria-describedby="offsetError"><small class="error" id="offsetError"></small></div>
+          <div><label for="topOffset">Offset above object, m</label><input id="topOffset" name="topOffset" type="text" inputmode="decimal" value="0" aria-describedby="topOffsetError"><small class="error" id="topOffsetError"></small></div>
+          <div><label for="density">Fabric mass per area, kg/m²</label><input id="density" name="density" type="text" inputmode="decimal" aria-describedby="densityHelp densityError"><small class="error" id="densityError"></small></div>
+        </div>
+        <small id="densityHelp">Use your own input. No material specification is assumed. Mass excludes overlaps, waste, supports and attachments.</small>
+        <div class="actions"><button type="submit">Calculate</button><button type="reset" class="secondary">Reset</button></div>
+        <button type="button" id="example" class="text-button">Try a synthetic example ↗</button>
+      </form>
+      <section class="panel results" aria-labelledby="resultTitle">
+        <div class="section-title"><span>03</span><h2 id="resultTitle">Understand the result</h2></div>
+        <p id="status" class="hint" role="status">Ready for your inputs</p>
+        <div class="metrics">
+          <div><p>Kinetic energy</p><strong id="energy">—</strong></div>
+          <div><p>Enclosure area</p><strong id="area">—</strong></div>
+          <div><p>Fabric mass estimate</p><strong id="fabric">—</strong></div>
+        </div>
+        <button id="summaryButton" type="button" class="secondary">Build current summary</button>
+        <h3>Readable summary</h3>
+        <div id="summary" class="summary" tabindex="-1">Enter scenario inputs, then calculate or build a summary.</div>
+        <details open>
+          <summary>Illustrative prototype assumptions</summary>
+          <p>The A/B/C bands are product hypotheses, not normative, official or engineering-verified classifications. They describe inputs and do not rate protection.</p>
+          <ul>
+            <li>Mass: A &lt; 30; B 30–&lt;100; C 100–250 kg.</li>
+            <li>Speed: A &lt; 60; B 60–&lt;120; C 120–200 km/h.</li>
+            <li>Positive charge: A &lt; 6; B 6–&lt;10; C 10–15 kg.</li>
+          </ul>
+          <p>Higher values are outside the illustrative ranges. Blank and zero charge are separate states. Assumptions are isolated in <code>ASSUMPTIONS</code>; formulas do not depend on these bands.</p>
+        </details>
+        <details>
+          <summary>Formulas &amp; limitations</summary>
+          <p>v = speed / 3.6; E = ½mv². a = length + 2 × offset; b = width + 2 × offset; c = height + top offset. Area = ab + 2ac + 2bc. Fabric mass = area × input mass per area.</p>
+          <p>This is not an engineering design calculation. It excludes blast loads, fragmentation, attachments and dynamic deflection. It cannot verify any specific net and does not replace specialist engineering review.</p>
+        </details>
+      </section>
+    </div>
+    <footer>Deterministic calculations · No runtime AI · No data sent or stored</footer>
+  </main>
+</body>
+</html>
